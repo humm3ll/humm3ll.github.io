@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
+import { HashRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 import Nav    from './components/Nav'
 import Footer from './components/Footer'
@@ -37,9 +37,9 @@ function Layout() {
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Cursor />
       <Layout />
-    </BrowserRouter>
+    </HashRouter>
   )
 }
