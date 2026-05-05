@@ -1,8 +1,12 @@
 export default function Footer() {
   return (
-    <footer style={{ padding:'24px 4vw', borderTop:'1px solid rgba(255,255,255,0.05)', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
-      <span style={{ fontFamily:'JetBrains Mono,monospace', fontSize:9, letterSpacing:'0.12em', textTransform:'uppercase', color:'#2a2a2a' }}>© 2025 Ethan Hulme</span>
-      <span style={{ fontFamily:'JetBrains Mono,monospace', fontSize:9, letterSpacing:'0.12em', textTransform:'uppercase', color:'#2a2a2a' }}>v2.0.0 — PORTFOLIO_SYS</span>
+    <footer style={{ padding: '16px 32px', borderTop: '1px solid #1a1a1a', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#000' }}>
+      <span style={{ fontFamily: 'Share Tech Mono, monospace', fontSize: 10, color: '#1a1a1a', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+        © 2025 ETHAN HULME
+      </span>
+      <span style={{ fontFamily: 'Share Tech Mono, monospace', fontSize: 10, color: '#1a1a1a', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+        PORTFOLIO_SYS v2.0 // ALL RIGHTS RESERVED
+      </span>
     </footer>
   )
 }

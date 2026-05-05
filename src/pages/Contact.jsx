@@ -1,85 +1,77 @@
 import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
-import Ticker from '../components/Ticker'
+
+const mono = { fontFamily: 'Share Tech Mono, monospace' }
+const vt   = { fontFamily: 'VT323, monospace' }
 
 export default function Contact() {
   const headerRef = useRef(null)
-  const headerIn  = useInView(headerRef, { once:true })
+  const headerIn  = useInView(headerRef, { once: true })
   const bodyRef   = useRef(null)
-  const bodyIn    = useInView(bodyRef, { once:true, margin:'-10%' })
+  const bodyIn    = useInView(bodyRef, { once: true, margin: '-10%' })
 
   return (
     <main>
-      <section ref={headerRef} style={{ padding:'140px 4vw 80px', borderBottom:'1px solid rgba(255,255,255,0.05)' }}>
-        <motion.div initial={{opacity:0}} animate={headerIn?{opacity:1}:{}} transition={{duration:0.6}}
-          style={{ fontFamily:'JetBrains Mono,monospace', fontSize:9, letterSpacing:'0.16em', textTransform:'uppercase', color:'#2a2a2a', marginBottom:32 }}>
-          [ SYS_CONTACT / OPEN_CHANNEL ]
+      <section ref={headerRef} style={{ padding:'130px 32px 60px', borderBottom:'1px solid #1a1a1a', position:'relative', overflow:'hidden' }}>
+        <motion.div initial={{opacity:0}} animate={headerIn?{opacity:1}:{}} transition={{duration:0.4}}
+          style={{ ...mono, fontSize:10, color:'#2a2a2a', letterSpacing:'0.14em', textTransform:'uppercase', marginBottom:24 }}>
+          // SYS_CONTACT / OPEN_CHANNEL / AWAITING_INPUT
         </motion.div>
-        <div style={{ overflow:'hidden' }}>
-          <motion.h1 initial={{y:'100%'}} animate={headerIn?{y:0}:{}} transition={{duration:1.1,ease:[0.16,1,0.3,1]}}
-            style={{ fontFamily:'Syne,sans-serif', fontWeight:800, fontSize:'clamp(64px,12vw,170px)', lineHeight:0.88, letterSpacing:'-0.04em', color:'#d4d4d4' }}>
-            Let's<br /><span style={{ color:'#c8ff00' }}>Talk.</span>
+        <div style={{overflow:'hidden'}}>
+          <motion.h1 initial={{y:'100%'}} animate={headerIn?{y:0}:{}} transition={{duration:0.8,ease:[0.16,1,0.3,1]}}
+            style={{ ...vt, fontSize:'clamp(56px,12vw,160px)', lineHeight:0.9, letterSpacing:'0.04em', color:'#e8e8e8' }}>
+            OPEN<br /><span style={{color:'#8b0000'}}>CHANNEL_</span>
           </motion.h1>
         </div>
+        <div style={{position:'absolute',bottom:0,right:32,width:80,height:1,background:'linear-gradient(to left,#8b0000,transparent)'}}/>
       </section>
 
-      <Ticker />
-
-      <section ref={bodyRef} style={{ padding:'100px 4vw 120px', borderBottom:'1px solid rgba(255,255,255,0.05)', display:'grid', gridTemplateColumns:'1fr 1fr', gap:80 }}>
-        {/* Email */}
-        <motion.div initial={{opacity:0,y:30}} animate={bodyIn?{opacity:1,y:0}:{}} transition={{duration:0.9}}>
-          <div style={{ fontFamily:'JetBrains Mono,monospace', fontSize:9, letterSpacing:'0.14em', textTransform:'uppercase', color:'#2a2a2a', marginBottom:20, paddingBottom:14, borderBottom:'1px solid rgba(255,255,255,0.06)' }}>
-            PRIMARY_CHANNEL
+      <section ref={bodyRef} style={{ padding:'80px 32px 120px', borderBottom:'1px solid #1a1a1a', display:'grid', gridTemplateColumns:'1fr 1fr', gap:64 }}>
+        <motion.div initial={{opacity:0,y:20}} animate={bodyIn?{opacity:1,y:0}:{}} transition={{duration:0.7}}>
+          <div style={{ ...mono, fontSize:9, color:'#2a2a2a', letterSpacing:'0.14em', textTransform:'uppercase', marginBottom:20, paddingBottom:14, borderBottom:'1px solid #1a1a1a' }}>
+            [ PRIMARY_CHANNEL ]
           </div>
-          <motion.a href="mailto:humm3ll@outlook.com"
-            whileHover={{ color:'#d4d4d4' }}
-            style={{ fontFamily:'Syne,sans-serif', fontWeight:700, fontSize:'clamp(20px,3vw,38px)', letterSpacing:'-0.02em', color:'#444', textDecoration:'none', display:'block', lineHeight:1.1, marginBottom:20, transition:'color 0.2s' }}>
-            humm3ll<br />@outlook.com
-          </motion.a>
-          <p style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:13, color:'rgba(212,212,212,0.3)', lineHeight:1.75, maxWidth:360 }}>
-            Open to internships, placement years, collaborative projects, and security research partnerships.
+          <a href="mailto:humm3ll@outlook.com"
+            style={{ ...vt, fontSize:36, color:'#333', textDecoration:'none', display:'block', lineHeight:1.1, marginBottom:20, letterSpacing:'0.04em', transition:'color 0.15s' }}
+            onMouseEnter={e=>e.currentTarget.style.color='#e8e8e8'}
+            onMouseLeave={e=>e.currentTarget.style.color='#333'}>
+            HUMM3LL<br />@OUTLOOK.COM
+          </a>
+          <p style={{ ...mono, fontSize:11, color:'rgba(232,232,232,0.25)', lineHeight:1.75, letterSpacing:'0.04em', textTransform:'uppercase', maxWidth:340 }}>
+            OPEN TO INTERNSHIPS, PLACEMENT YEARS, COLLAB PROJECTS, AND SECURITY RESEARCH.
           </p>
         </motion.div>
 
-        {/* Links + status */}
-        <motion.div initial={{opacity:0,y:30}} animate={bodyIn?{opacity:1,y:0}:{}} transition={{duration:0.9,delay:0.12}}>
-          <div style={{ fontFamily:'JetBrains Mono,monospace', fontSize:9, letterSpacing:'0.14em', textTransform:'uppercase', color:'#2a2a2a', marginBottom:20, paddingBottom:14, borderBottom:'1px solid rgba(255,255,255,0.06)' }}>
-            SECONDARY_CHANNELS
+        <motion.div initial={{opacity:0,y:20}} animate={bodyIn?{opacity:1,y:0}:{}} transition={{duration:0.7,delay:0.12}}>
+          <div style={{ ...mono, fontSize:9, color:'#2a2a2a', letterSpacing:'0.14em', textTransform:'uppercase', marginBottom:20, paddingBottom:14, borderBottom:'1px solid #1a1a1a' }}>
+            [ SECONDARY_CHANNELS ]
           </div>
-          <div style={{ display:'flex', flexDirection:'column', gap:0, marginBottom:40 }}>
-            {[
-              { label:'GitHub',   href:'https://github.com/humm3ll' },
-              { label:'LinkedIn', href:'https://linkedin.com/in/ethan-hulme' },
-            ].map(({ label, href }) => (
-              <motion.a key={label} href={href} target="_blank" rel="noopener noreferrer"
-                whileHover={{ color:'#d4d4d4', x:4 }}
-                style={{ fontFamily:'Syne,sans-serif', fontWeight:600, fontSize:'clamp(22px,2.5vw,34px)', letterSpacing:'-0.02em', color:'#2a2a2a', textDecoration:'none', display:'flex', justifyContent:'space-between', alignItems:'center', padding:'14px 0', borderBottom:'1px solid rgba(255,255,255,0.04)', transition:'color 0.2s' }}>
-                {label}
-                <span style={{ fontSize:14 }}>↗</span>
-              </motion.a>
-            ))}
-          </div>
+          {[
+            { label:'GITHUB',   href:'https://github.com/humm3ll' },
+            { label:'LINKEDIN', href:'https://linkedin.com/in/ethan-hulme' },
+          ].map(({ label, href }) => (
+            <a key={label} href={href} target="_blank" rel="noopener noreferrer"
+              style={{ ...vt, fontSize:30, color:'#2a2a2a', textDecoration:'none', display:'flex', justifyContent:'space-between', alignItems:'center', padding:'14px 0', borderBottom:'1px solid #1a1a1a', transition:'color 0.15s', letterSpacing:'0.04em' }}
+              onMouseEnter={e=>{ e.currentTarget.style.color='#8b0000'; e.currentTarget.style.paddingLeft='8px' }}
+              onMouseLeave={e=>{ e.currentTarget.style.color='#2a2a2a'; e.currentTarget.style.paddingLeft='0' }}>
+              {label} <span style={{ fontSize:16 }}>↗</span>
+            </a>
+          ))}
 
-          {/* Status panel */}
-          <div style={{ border:'1px solid rgba(255,255,255,0.07)', background:'rgba(255,255,255,0.02)', backdropFilter:'blur(20px)', padding:20 }}>
+          <div style={{ marginTop:32, border:'1px solid #1a1a1a', padding:20, background:'rgba(139,0,0,0.03)' }}>
             <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:14 }}>
-              <div style={{ width:6, height:6, borderRadius:'50%', background:'#c8ff00', animation:'pulse-dot 2s ease-in-out infinite' }} />
-              <span style={{ fontFamily:'JetBrains Mono,monospace', fontSize:9, letterSpacing:'0.12em', textTransform:'uppercase', color:'#c8ff00' }}>ONLINE — OPEN_TO_WORK</span>
+              <div style={{ width:6, height:6, borderRadius:'50%', background:'#8b0000', animation:'border-pulse 1.5s ease-in-out infinite' }} />
+              <span style={{ ...mono, fontSize:9, letterSpacing:'0.12em', textTransform:'uppercase', color:'#8b0000' }}>ONLINE — OPEN_TO_WORK</span>
             </div>
-            {[
-              ['Location',     'England, UK'],
-              ['Timezone',     'UTC+1 / BST'],
-              ['Response',     '< 24 hours'],
-            ].map(([k,v]) => (
-              <div key={k} style={{ display:'flex', justifyContent:'space-between', padding:'7px 0', borderTop:'1px solid rgba(255,255,255,0.04)' }}>
-                <span style={{ fontFamily:'JetBrains Mono,monospace', fontSize:9, textTransform:'uppercase', color:'#2a2a2a', letterSpacing:'0.1em' }}>{k}</span>
-                <span style={{ fontFamily:'JetBrains Mono,monospace', fontSize:9, color:'#444' }}>{v}</span>
+            {[['LOCATION','ENGLAND, UK'],['TIMEZONE','UTC+1 // BST'],['RESPONSE','< 24 HOURS']].map(([k,v])=>(
+              <div key={k} style={{ display:'flex', justifyContent:'space-between', padding:'7px 0', borderTop:'1px solid #1a1a1a' }}>
+                <span style={{ ...mono, fontSize:9, textTransform:'uppercase', color:'#1a1a1a', letterSpacing:'0.1em' }}>{k}</span>
+                <span style={{ ...mono, fontSize:9, color:'#333', letterSpacing:'0.06em' }}>{v}</span>
               </div>
             ))}
           </div>
         </motion.div>
       </section>
-      <style>{`@keyframes pulse-dot{0%,100%{box-shadow:0 0 0 0 rgba(200,255,0,0.5)}50%{box-shadow:0 0 0 5px rgba(200,255,0,0)}}`}</style>
     </main>
   )
 }
