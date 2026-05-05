@@ -1,42 +1,18 @@
-const items = [
-  'Offensive Security', 'Adversary Emulation', 'Machine Learning',
-  'Data Science', 'Red Teaming', 'eBPF / XDP', 'Threat Detection',
-  'Autonomous Systems', 'C / Rust / Python',
-]
+const items = ['Offensive Security','Adversary Emulation','Machine Learning','Data Science','Red Teaming','eBPF / XDP','Threat Detection','Autonomous Systems','C / Rust / Python','Post-Quantum Crypto']
 
-export default function Ticker({ inverted = false }) {
+export default function Ticker() {
   const doubled = [...items, ...items]
-
   return (
-    <div
-      className="overflow-hidden py-3"
-      style={{
-        borderTop:    `1px solid #1a1a1a`,
-        borderBottom: `1px solid #1a1a1a`,
-        background:   inverted ? '#f0ede6' : '#000',
-      }}
-    >
-      <div
-        className="flex whitespace-nowrap"
-        style={{ animation: 'ticker 28s linear infinite' }}
-      >
+    <div style={{ overflow:'hidden', padding:'10px 0', borderTop:'1px solid rgba(255,255,255,0.05)', borderBottom:'1px solid rgba(255,255,255,0.05)', background:'rgba(255,255,255,0.01)' }}>
+      <div style={{ display:'flex', whiteSpace:'nowrap', animation:'ticker 36s linear infinite' }}>
         {doubled.map((item, i) => (
-          <span
-            key={i}
-            className="font-mono text-[10px] tracking-[0.18em] uppercase px-10 flex items-center gap-10"
-            style={{ color: inverted ? '#000' : '#3a3a3a' }}
-          >
+          <span key={i} style={{ fontFamily:'JetBrains Mono,monospace', fontSize:9, letterSpacing:'0.2em', textTransform:'uppercase', color:'rgba(102,102,102,0.5)', padding:'0 32px', display:'flex', alignItems:'center', gap:32 }}>
             {item}
-            <span style={{ fontSize: '6px', color: inverted ? '#000' : '#1a1a1a' }}>◆</span>
+            <span style={{ fontSize:4, color:'rgba(200,255,0,0.3)' }}>◆</span>
           </span>
         ))}
       </div>
-      <style>{`
-        @keyframes ticker {
-          from { transform: translateX(0); }
-          to   { transform: translateX(-50%); }
-        }
-      `}</style>
+      <style>{`@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}`}</style>
     </div>
   )
 }

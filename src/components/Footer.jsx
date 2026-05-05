@@ -1,20 +1,8 @@
-import { Link } from 'react-router-dom'
-
 export default function Footer() {
   return (
-    <footer
-      className="px-10 py-6 flex justify-between items-center"
-      style={{ borderTop: '1px solid #1a1a1a' }}
-    >
-      <span className="font-mono text-[9px] tracking-widest uppercase" style={{ color: '#3a3a3a' }}>
-        © 2025 Ethan Hulme
-      </span>
-      <span className="font-mono text-[9px] tracking-widest uppercase" style={{ color: '#3a3a3a' }}>
-        53.5461°N 2.6461°W
-      </span>
-      <span className="font-mono text-[9px] tracking-widest uppercase" style={{ color: '#3a3a3a' }}>
-        humm3ll.github.io
-      </span>
+    <footer style={{ padding:'24px 4vw', borderTop:'1px solid rgba(255,255,255,0.05)', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+      <span style={{ fontFamily:'JetBrains Mono,monospace', fontSize:9, letterSpacing:'0.12em', textTransform:'uppercase', color:'#2a2a2a' }}>© 2025 Ethan Hulme</span>
+      <span style={{ fontFamily:'JetBrains Mono,monospace', fontSize:9, letterSpacing:'0.12em', textTransform:'uppercase', color:'#2a2a2a' }}>v2.0.0 — PORTFOLIO_SYS</span>
     </footer>
   )
 }

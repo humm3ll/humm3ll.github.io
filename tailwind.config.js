@@ -4,29 +4,20 @@ export default {
   theme: {
     extend: {
       colors: {
-        black:   '#000000',
-        white:   '#f0ede6',
-        dim:     '#3a3a3a',
-        dimmer:  '#1a1a1a',
+        void:    '#050505',
+        'void-2':'#0a0a0a',
+        'void-3':'#111111',
+        silver:  '#d4d4d4',
+        'silver-dim': '#666666',
+        'silver-dimmer': '#2a2a2a',
         acid:    '#c8ff00',
       },
       fontFamily: {
-        display: ['"Bebas Neue"', 'sans-serif'],
-        serif:   ['"Instrument Serif"', 'serif'],
-        mono:    ['"Departure Mono"', 'monospace'],
-        body:    ['"Familjen Grotesk"', 'sans-serif'],
-      },
-      letterSpacing: {
-        tightest: '-0.04em',
-        tighter:  '-0.02em',
-        widest:   '0.18em',
-      },
-      transitionTimingFunction: {
-        expo: 'cubic-bezier(0.16, 1, 0.3, 1)',
+        syne:  ['"Syne"', 'sans-serif'],
+        mono:  ['"JetBrains Mono"', 'monospace'],
+        body:  ['"Space Grotesk"', 'sans-serif'],
       },
     },
   },
   plugins: [],
 }
-
-

@@ -1,216 +1,87 @@
-import { useEffect, useRef, useState } from 'react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useRef } from 'react'
+import { motion, useInView } from 'framer-motion'
 import { projects } from '../data'
 import Ticker from '../components/Ticker'
 
-gsap.registerPlugin(ScrollTrigger)
-
-// Placeholder gradient images (replace with real screenshots later)
-const gradients = [
-  'linear-gradient(135deg, #0a0f0a 0%, #0d2010 100%)',
-  'linear-gradient(135deg, #0a0a0f 0%, #0d0d20 100%)',
-  'linear-gradient(135deg, #0f0a0a 0%, #200d0d 100%)',
-  'linear-gradient(135deg, #0a0f0f 0%, #0d2020 100%)',
-]
-
 export default function Work() {
-  const headerRef  = useRef(null)
-  const followerRef = useRef(null)
-  const [activeProject, setActiveProject] = useState(null)
-
-  // Header entrance
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      const lines = headerRef.current?.querySelectorAll('.split-inner')
-      if (lines) {
-        gsap.to(lines, {
-          y: '0%', duration: 1.1, ease: 'expo.out', stagger: 0.1, delay: 0.1,
-        })
-      }
-    })
-    return () => ctx.revert()
-  }, [])
-
-  // Image follower mouse tracking
-  useEffect(() => {
-    const onMove = (e) => {
-      if (!followerRef.current) return
-      followerRef.current.style.left = e.clientX + 'px'
-      followerRef.current.style.top  = e.clientY + 'px'
-    }
-    window.addEventListener('mousemove', onMove)
-    return () => window.removeEventListener('mousemove', onMove)
-  }, [])
+  const headerRef = useRef(null)
+  const headerIn  = useInView(headerRef, { once: true })
 
   return (
     <main>
-      {/* Image follower */}
-      <div
-        ref={followerRef}
-        className="fixed pointer-events-none z-[200] w-[300px] overflow-hidden"
-        style={{
-          aspectRatio: '4/3',
-          transform: 'translate(-50%, -50%)',
-          opacity: activeProject !== null ? 1 : 0,
-          transition: 'opacity 0.3s ease, transform 0.3s ease',
-          scale: activeProject !== null ? 1 : 0.9,
-        }}
-      >
-        {activeProject !== null && (
-          <div
-            className="w-full h-full"
-            style={{ background: gradients[activeProject % gradients.length] }}
-          >
-            {/* Replace with <img> when you have screenshots */}
-            <div className="w-full h-full flex items-center justify-center">
-              <span
-                className="font-mono text-[10px] tracking-widest uppercase"
-                style={{ color: '#3a3a3a' }}
-              >
-                {projects[activeProject]?.name}
-              </span>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Header */}
-      <section className="px-10 pt-40 pb-20" style={{ borderBottom: '1px solid #1a1a1a' }}>
-        <div
-          className="font-mono text-[10px] tracking-widest uppercase mb-12"
-          style={{ color: '#3a3a3a' }}
-        >
-          [ Work ]
+      <section ref={headerRef} style={{ padding:'140px 4vw 80px', borderBottom:'1px solid rgba(255,255,255,0.05)' }}>
+        <motion.div initial={{opacity:0}} animate={headerIn?{opacity:1}:{}} transition={{duration:0.6}}
+          style={{ fontFamily:'JetBrains Mono,monospace', fontSize:9, letterSpacing:'0.16em', textTransform:'uppercase', color:'#2a2a2a', marginBottom:32 }}>
+          [ SYS_WORK / ALL_PROJECTS ]
+        </motion.div>
+        <div style={{ overflow:'hidden' }}>
+          <motion.h1 initial={{ y:'100%' }} animate={headerIn?{y:0}:{}} transition={{ duration:1.1, ease:[0.16,1,0.3,1] }}
+            style={{ fontFamily:'Syne,sans-serif', fontWeight:800, fontSize:'clamp(60px,10vw,140px)', lineHeight:0.88, letterSpacing:'-0.04em', color:'#d4d4d4' }}>
+            Selected<br /><span style={{ color:'#c8ff00' }}>Work</span>
+          </motion.h1>
         </div>
-        <h1
-          ref={headerRef}
-          className="font-serif italic"
-          style={{
-            fontSize: 'clamp(64px, 11vw, 160px)',
-            lineHeight: 0.88,
-            letterSpacing: '-0.02em',
-          }}
-        >
-          <span className="split-line"><span className="split-inner">Selected</span></span>
-          <span className="split-line"><span className="split-inner">Projects</span></span>
-        </h1>
       </section>
 
       <Ticker />
 
-      {/* Project list */}
-      <section className="px-10">
+      <section style={{ padding:'0 4vw 120px' }}>
         {projects.map((p, i) => (
-          <WorkItem
-            key={p.id}
-            project={p}
-            index={i}
-            onHover={setActiveProject}
-          />
+          <WorkRow key={p.id} project={p} index={i} />
         ))}
       </section>
     </main>
   )
 }
 
-function WorkItem({ project, index, onHover }) {
-  const rowRef = useRef(null)
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo(rowRef.current,
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1, y: 0, duration: 0.8, ease: 'expo.out',
-          scrollTrigger: { trigger: rowRef.current, start: 'top 90%' },
-          delay: index * 0.05,
-        }
-      )
-    })
-    return () => ctx.revert()
-  }, [index])
+function WorkRow({ project, index }) {
+  const ref    = useRef(null)
+  const inView = useInView(ref, { once:true, margin:'-5%' })
 
   return (
-    <a
-      ref={rowRef}
-      href={project.link}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="group block no-underline"
-      style={{
-        borderBottom: '1px solid #1a1a1a',
-        color: 'inherit',
-        textDecoration: 'none',
-        opacity: 0,
-      }}
-      onMouseEnter={() => onHover(index)}
-      onMouseLeave={() => onHover(null)}
-    >
-      <div
-        className="grid py-8 items-start gap-8 transition-all duration-300"
-        style={{
-          gridTemplateColumns: '48px 1fr auto auto',
-          paddingLeft: '0px',
-          transition: 'padding-left 0.3s cubic-bezier(0.16,1,0.3,1)',
-        }}
-        onMouseEnter={e => e.currentTarget.style.paddingLeft = '16px'}
-        onMouseLeave={e => e.currentTarget.style.paddingLeft = '0px'}
-      >
-        {/* Index */}
-        <div className="font-mono text-[10px] pt-1" style={{ color: '#3a3a3a' }}>
-          {project.index}
-        </div>
+    <motion.a ref={ref} href={project.link} target="_blank" rel="noopener noreferrer"
+      initial={{ opacity:0, x:-30 }}
+      animate={inView ? { opacity:1, x:0 } : {}}
+      transition={{ duration:0.8, ease:[0.16,1,0.3,1], delay: index*0.07 }}
+      whileHover="hovered"
+      style={{ display:'grid', gridTemplateColumns:'64px 1fr auto auto', alignItems:'center', gap:32, padding:'28px 0', borderBottom:'1px solid rgba(255,255,255,0.05)', textDecoration:'none', color:'inherit', position:'relative', cursor:'none' }}>
 
-        {/* Main info */}
-        <div>
-          <div
-            className="font-serif italic mb-3 transition-colors duration-200 group-hover:text-[#c8ff00]"
-            style={{
-              fontSize: 'clamp(28px, 4vw, 56px)',
-              lineHeight: 1,
-              letterSpacing: '-0.01em',
-            }}
-          >
-            {project.name}
-          </div>
-          <p
-            className="font-body text-sm leading-relaxed max-w-lg"
-            style={{ color: 'rgba(240,237,230,0.35)', letterSpacing: '0.02em' }}
-          >
-            {project.description}
-          </p>
-        </div>
+      {/* Left accent bar on hover */}
+      <motion.div variants={{ hovered:{ scaleY:1, opacity:1 } }} initial={{ scaleY:0, opacity:0 }}
+        style={{ position:'absolute', left:0, top:0, bottom:0, width:1, background:'#c8ff00', transformOrigin:'bottom' }} />
 
-        {/* Tags */}
-        <div className="hidden md:flex flex-col gap-2 items-end pt-1">
-          {project.tags.map(t => (
-            <span
-              key={t}
-              className="font-mono text-[9px] tracking-wider uppercase px-2 py-1 transition-colors duration-200 group-hover:border-[#c8ff00] group-hover:text-[#c8ff00]"
-              style={{ border: '1px solid #1a1a1a', color: '#3a3a3a' }}
-            >
-              {t}
-            </span>
-          ))}
-        </div>
+      {/* Index */}
+      <motion.span variants={{ hovered:{ color:'#c8ff00' } }}
+        style={{ fontFamily:'JetBrains Mono,monospace', fontSize:11, letterSpacing:'0.1em', color:'#2a2a2a', transition:'color 0.3s' }}>
+        {project.pid}
+      </motion.span>
 
-        {/* Arrow + year */}
-        <div className="flex flex-col items-end justify-between pt-1 gap-8">
-          <span
-            className="font-mono text-xl transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:text-[#c8ff00]"
-            style={{ color: '#3a3a3a' }}
-          >
-            ↗
-          </span>
-          <span
-            className="font-mono text-[10px]"
-            style={{ color: '#1a1a1a' }}
-          >
-            {project.year}
-          </span>
-        </div>
+      {/* Name + description */}
+      <div>
+        <motion.div variants={{ hovered:{ color:'#d4d4d4' } }}
+          style={{ fontFamily:'Syne,sans-serif', fontWeight:700, fontSize:'clamp(22px,3vw,44px)', letterSpacing:'-0.03em', color:'#444', lineHeight:1, marginBottom:6, transition:'color 0.4s' }}>
+          {project.name}
+        </motion.div>
+        <p style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:12, color:'rgba(212,212,212,0.25)', lineHeight:1.6, maxWidth:520 }}>
+          {project.description}
+        </p>
       </div>
-    </a>
+
+      {/* Tags */}
+      <div className="hidden md:flex flex-col gap-2 items-end">
+        {project.tags.map(t => (
+          <motion.span key={t} variants={{ hovered:{ borderColor:'rgba(200,255,0,0.3)', color:'#c8ff00' } }}
+            style={{ fontFamily:'JetBrains Mono,monospace', fontSize:8, letterSpacing:'0.1em', textTransform:'uppercase', color:'#2a2a2a', border:'1px solid rgba(255,255,255,0.06)', padding:'3px 8px', transition:'all 0.2s' }}>
+            {t}
+          </motion.span>
+        ))}
+      </div>
+
+      {/* Arrow */}
+      <div style={{ display:'flex', flexDirection:'column', alignItems:'flex-end', justifyContent:'space-between', gap:16 }}>
+        <motion.span variants={{ hovered:{ x:4, y:-4, color:'#c8ff00' } }}
+          style={{ fontFamily:'JetBrains Mono,monospace', fontSize:18, color:'#2a2a2a', transition:'all 0.3s' }}>↗</motion.span>
+        <span style={{ fontFamily:'JetBrains Mono,monospace', fontSize:9, color:'#1a1a1a' }}>{project.year}</span>
+      </div>
+    </motion.a>
   )
 }

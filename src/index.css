@@ -1,33 +1,118 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Instrument+Serif:ital@0;1&family=Departure+Mono&family=Familjen+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --void: #050505;
+  --void-2: #0a0a0a;
+  --void-3: #111111;
+  --silver: #d4d4d4;
+  --silver-dim: #666666;
+  --silver-dimmer: #2a2a2a;
+  --acid: #c8ff00;
+  --acid-dim: rgba(200,255,0,0.08);
+  --glass-border: rgba(255,255,255,0.08);
+  --glass-bg: rgba(255,255,255,0.03);
+  --glow: rgba(200,255,0,0.04);
+}
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+html { overflow-x: hidden; }
+
 body {
-  background: #000;
-  color: #f0ede6;
-  font-family: 'Familjen Grotesk', sans-serif;
+  background: var(--void);
+  color: var(--silver);
+  font-family: 'Space Grotesk', sans-serif;
   overflow-x: hidden;
+  cursor: none;
+  -webkit-font-smoothing: antialiased;
 }
 
 *, *:hover { cursor: none !important; }
 
-::-webkit-scrollbar { width: 2px; }
-::-webkit-scrollbar-track { background: #000; }
-::-webkit-scrollbar-thumb { background: #3a3a3a; }
+::-webkit-scrollbar { width: 1px; }
+::-webkit-scrollbar-track { background: var(--void); }
+::-webkit-scrollbar-thumb { background: var(--silver-dimmer); }
 
-.split-line { display: block; overflow: hidden; }
-.split-inner { display: block; transform: translateY(110%); will-change: transform; }
+/* Mask reveal */
+.mask-wrap { overflow: hidden; }
+.mask-inner { display: block; will-change: transform; }
 
-.grain::after {
+/* Glass panel */
+.glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Scanlines */
+.scanlines::before {
   content: '';
   position: fixed;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.03) 2px,
+    rgba(0,0,0,0.03) 4px
+  );
   pointer-events: none;
-  z-index: 9000;
-  opacity: 0.3;
+  z-index: 9500;
+}
+
+/* Noise grain */
+.grain::after {
+  content: '';
+  position: fixed;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9400;
+  opacity: 0.25;
+  animation: grain 8s steps(10) infinite;
+}
+
+@keyframes grain {
+  0%,100% { transform: translate(0,0) }
+  10% { transform: translate(-2%,-3%) }
+  20% { transform: translate(3%,1%) }
+  30% { transform: translate(-1%,4%) }
+  40% { transform: translate(2%,-2%) }
+  50% { transform: translate(-3%,2%) }
+  60% { transform: translate(1%,-1%) }
+  70% { transform: translate(-2%,3%) }
+  80% { transform: translate(3%,-2%) }
+  90% { transform: translate(-1%,1%) }
+}
+
+/* Cursor glow radial — mounted via JS */
+#cursor-glow {
+  position: fixed;
+  pointer-events: none;
+  z-index: 1;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(200,255,0,0.035) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  transition: opacity 0.3s ease;
+}
+
+@layer utilities {
+  .font-syne { font-family: 'Syne', sans-serif; }
+  .font-mono { font-family: 'JetBrains Mono', monospace; }
+  .font-body { font-family: 'Space Grotesk', sans-serif; }
+  .text-silver { color: #d4d4d4; }
+  .text-silver-dim { color: #666; }
+  .text-silver-dimmer { color: #2a2a2a; }
+  .text-acid { color: #c8ff00; }
+  .bg-void { background: #050505; }
+  .border-glass { border-color: rgba(255,255,255,0.08); }
 }

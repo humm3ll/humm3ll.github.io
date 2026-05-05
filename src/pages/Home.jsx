@@ -1,298 +1,165 @@
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { motion, useInView } from 'framer-motion'
 import Ticker from '../components/Ticker'
 import { projects } from '../data'
 
-gsap.registerPlugin(ScrollTrigger)
+const maskItem = {
+  hidden: { clipPath: 'inset(0 0 100% 0)', y: 20 },
+  show:   { clipPath: 'inset(0 0 0% 0)',   y: 0, transition: { duration: 1.1, ease: [0.16, 1, 0.3, 1] } }
+}
 
 export default function Home() {
-  const heroRef     = useRef(null)
-  const nameRef     = useRef(null)
-  const subRef      = useRef(null)
-  const projectsRef = useRef(null)
-
-  // Hero entrance
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      const lines = nameRef.current?.querySelectorAll('.split-inner')
-      if (lines) {
-        gsap.to(lines, {
-          y: '0%',
-          duration: 1.2,
-          ease: 'expo.out',
-          stagger: 0.12,
-          delay: 0.1,
-        })
-      }
-      gsap.fromTo(subRef.current,
-        { opacity: 0, y: 24 },
-        { opacity: 1, y: 0, duration: 1, ease: 'expo.out', delay: 0.5 }
-      )
-    })
-    return () => ctx.revert()
-  }, [])
-
-  // Scroll reveals
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.utils.toArray('.reveal-up').forEach((el) => {
-        gsap.fromTo(el,
-          { opacity: 0, y: 40 },
-          {
-            opacity: 1, y: 0, duration: 0.9, ease: 'expo.out',
-            scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' }
-          }
-        )
-      })
-    })
-    return () => ctx.revert()
-  }, [])
-
   return (
     <main>
-      {/* ── HERO ── */}
-      <section
-        ref={heroRef}
-        className="relative min-h-screen flex flex-col justify-end pb-14 px-10 overflow-hidden"
-      >
-        {/* Top-left meta */}
-        <div
-          className="absolute top-28 left-10 font-mono text-[10px] tracking-[0.14em] uppercase leading-loose"
-          style={{ color: '#3a3a3a' }}
-        >
-          Security Engineer<br />
-          Edge Hill University<br />
-          England, UK
-        </div>
-
-        {/* Big name */}
-        <h1
-          ref={nameRef}
-          className="font-serif italic relative z-10"
-          style={{
-            fontSize: 'clamp(88px, 15vw, 220px)',
-            lineHeight: 0.88,
-            letterSpacing: '-0.02em',
-          }}
-        >
-          <span className="split-line">
-            <span className="split-inner">Ethan</span>
-          </span>
-          <span className="split-line">
-            <span className="split-inner">Hulme</span>
-          </span>
-        </h1>
-
-        {/* Bottom row */}
-        <div
-          ref={subRef}
-          className="flex justify-between items-end mt-6 flex-wrap gap-5 relative z-10"
-          style={{ opacity: 0 }}
-        >
-          <p
-            className="font-body text-sm leading-relaxed max-w-xs"
-            style={{ color: 'rgba(240,237,230,0.45)', letterSpacing: '0.02em' }}
-          >
-            Cybersecurity · AI / ML · Data Science.<br />
-            I build systems that find what others miss.
-          </p>
-          <div className="flex gap-4 items-center">
-            <Link
-              to="/work"
-              className="font-mono text-[10px] tracking-widest uppercase px-5 py-3 transition-colors duration-200"
-              style={{ background: '#f0ede6', color: '#000', textDecoration: 'none' }}
-              onMouseEnter={e => e.currentTarget.style.background = '#c8ff00'}
-              onMouseLeave={e => e.currentTarget.style.background = '#f0ede6'}
-            >
-              View Work
-            </Link>
-            <a
-              href="/ethan-hulme-cv.pdf"
-              download
-              className="font-mono text-[10px] tracking-widest uppercase px-5 py-3 transition-colors duration-200"
-              style={{ border: '1px solid #1a1a1a', color: 'rgba(240,237,230,0.45)', textDecoration: 'none' }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = '#f0ede6'; e.currentTarget.style.color = '#f0ede6' }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = '#1a1a1a'; e.currentTarget.style.color = 'rgba(240,237,230,0.45)' }}
-            >
-              CV ↓
-            </a>
-          </div>
-        </div>
-
-        {/* Vertical label right */}
-        <div
-          className="absolute right-10 bottom-14 font-mono text-[9px] tracking-[0.2em] uppercase"
-          style={{ writingMode: 'vertical-rl', color: '#1a1a1a' }}
-        >
-          Humm3ll · 2025
-        </div>
-      </section>
-
-      {/* ── TICKER ── */}
+      <Hero />
       <Ticker />
-
-      {/* ── SELECTED WORK PREVIEW ── */}
-      <section
-        ref={projectsRef}
-        className="px-10 py-32"
-        style={{ borderBottom: '1px solid #1a1a1a' }}
-      >
-        <div className="flex justify-between items-baseline mb-20 reveal-up">
-          <h2
-            className="font-serif italic"
-            style={{
-              fontSize: 'clamp(48px, 7vw, 96px)',
-              lineHeight: 0.9,
-              letterSpacing: '-0.02em',
-            }}
-          >
-            Selected<br />Work
-          </h2>
-          <Link
-            to="/work"
-            className="font-mono text-[10px] tracking-widest uppercase transition-opacity duration-200 no-underline"
-            style={{ color: 'rgba(240,237,230,0.4)', textDecoration: 'none' }}
-            onMouseEnter={e => e.currentTarget.style.opacity = 1}
-            onMouseLeave={e => e.currentTarget.style.opacity = 0.4}
-          >
-            All Work →
-          </Link>
-        </div>
-
-        {/* Project rows */}
-        <div>
-          {projects.map((p, i) => (
-            <ProjectRow key={p.id} project={p} index={i} />
-          ))}
-        </div>
-      </section>
-
-      {/* ── INTRO BLURB ── */}
-      <section className="px-10 py-32" style={{ borderBottom: '1px solid #1a1a1a' }}>
-        <div className="max-w-2xl reveal-up">
-          <div
-            className="font-mono text-[10px] tracking-widest uppercase mb-8"
-            style={{ color: '#3a3a3a' }}
-          >
-            [ About ]
-          </div>
-          <p
-            className="font-serif italic mb-6"
-            style={{
-              fontSize: 'clamp(24px, 3vw, 40px)',
-              lineHeight: 1.15,
-              letterSpacing: '-0.01em',
-              color: '#f0ede6',
-            }}
-          >
-            I find vulnerabilities before attackers exploit them.
-          </p>
-          <p
-            className="font-body text-sm leading-relaxed mb-10"
-            style={{ color: 'rgba(240,237,230,0.4)', letterSpacing: '0.02em', maxWidth: '480px' }}
-          >
-            Computer Science student at Edge Hill University, specialising in offensive security,
-            adversary emulation, and intelligent threat detection. Building at the intersection
-            of cybersecurity, AI, and data science.
-          </p>
-          <Link
-            to="/about"
-            className="font-mono text-[10px] tracking-widest uppercase transition-opacity duration-200 no-underline"
-            style={{ color: 'rgba(240,237,230,0.4)', textDecoration: 'none' }}
-            onMouseEnter={e => e.currentTarget.style.color = '#f0ede6'}
-            onMouseLeave={e => e.currentTarget.style.color = 'rgba(240,237,230,0.4)'}
-          >
-            More about me →
-          </Link>
-        </div>
-      </section>
+      <ProjectGrid />
+      <AboutSnippet />
     </main>
   )
 }
 
-function ProjectRow({ project, index }) {
-  const rowRef = useRef(null)
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo(rowRef.current,
-        { opacity: 0, x: -20 },
-        {
-          opacity: 1, x: 0, duration: 0.7, ease: 'expo.out',
-          scrollTrigger: { trigger: rowRef.current, start: 'top 90%' },
-          delay: index * 0.06,
-        }
-      )
-    })
-    return () => ctx.revert()
-  }, [index])
-
+function Hero() {
   return (
-    <a
-      ref={rowRef}
-      href={project.link}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="group flex items-baseline gap-8 py-6 no-underline"
-      style={{
-        borderTop: '1px solid #1a1a1a',
-        color: 'inherit',
-        textDecoration: 'none',
-        transition: 'padding-left 0.3s cubic-bezier(0.16,1,0.3,1)',
-        opacity: 0,
-      }}
-      onMouseEnter={e => e.currentTarget.style.paddingLeft = '12px'}
-      onMouseLeave={e => e.currentTarget.style.paddingLeft = '0px'}
-    >
-      <span
-        className="font-mono text-[10px] tracking-wider shrink-0"
-        style={{ color: '#3a3a3a', width: '32px' }}
-      >
-        {project.index}
-      </span>
+    <section style={{ minHeight:'100vh', display:'flex', flexDirection:'column', justifyContent:'flex-end', padding:'0 4vw 56px', position:'relative', overflow:'hidden' }}>
+      <motion.div initial="hidden" animate="show" variants={{ hidden:{}, show:{ transition:{ staggerChildren:0.1 } } }} style={{ position:'relative', zIndex:2 }}>
+        <div style={{ overflow:'hidden' }}>
+          <motion.h1 variants={maskItem} style={{ fontFamily:'Syne,sans-serif', fontWeight:800, fontSize:'clamp(76px,13vw,190px)', lineHeight:0.88, letterSpacing:'-0.04em', color:'#d4d4d4', display:'block' }}>
+            Ethan
+          </motion.h1>
+        </div>
+        <div style={{ overflow:'hidden' }}>
+          <motion.h1 variants={maskItem} style={{ fontFamily:'Syne,sans-serif', fontWeight:800, fontSize:'clamp(76px,13vw,190px)', lineHeight:0.88, letterSpacing:'-0.04em', color:'#d4d4d4', marginBottom:36, display:'block' }}>
+            Hulme<span style={{ color:'#c8ff00' }}>.</span>
+          </motion.h1>
+        </div>
+        <motion.div variants={{ hidden:{opacity:0,y:24}, show:{opacity:1,y:0,transition:{duration:0.9,ease:[0.16,1,0.3,1]}} }}
+          style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-end', flexWrap:'wrap', gap:20 }}>
+          <div>
+            <div style={{ fontFamily:'JetBrains Mono,monospace', fontSize:10, letterSpacing:'0.14em', textTransform:'uppercase', color:'#444', marginBottom:10 }}>
+              Security Engineer · AI/ML · Data Science
+            </div>
+            <p style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:14, color:'rgba(212,212,212,0.4)', lineHeight:1.75, maxWidth:360 }}>
+              I build systems that find what others miss.
+            </p>
+          </div>
+          <div style={{ display:'flex', gap:12, alignItems:'center' }}>
+            <Link to="/work"
+              style={{ fontFamily:'JetBrains Mono,monospace', fontSize:10, letterSpacing:'0.14em', textTransform:'uppercase', background:'#c8ff00', color:'#000', padding:'12px 22px', textDecoration:'none', transition:'background 0.2s' }}
+              onMouseEnter={e=>e.currentTarget.style.background='#fff'}
+              onMouseLeave={e=>e.currentTarget.style.background='#c8ff00'}>
+              View Work
+            </Link>
+            <a href="/ethan-hulme-cv.pdf" download
+              style={{ fontFamily:'JetBrains Mono,monospace', fontSize:10, letterSpacing:'0.14em', textTransform:'uppercase', border:'1px solid rgba(255,255,255,0.1)', color:'#666', padding:'12px 22px', textDecoration:'none', transition:'all 0.2s', backdropFilter:'blur(20px)' }}
+              onMouseEnter={e=>{e.currentTarget.style.borderColor='rgba(200,255,0,0.4)';e.currentTarget.style.color='#c8ff00'}}
+              onMouseLeave={e=>{e.currentTarget.style.borderColor='rgba(255,255,255,0.1)';e.currentTarget.style.color='#666'}}>
+              CV ↓
+            </a>
+          </div>
+        </motion.div>
+      </motion.div>
+      <div style={{ position:'absolute', right:'4vw', bottom:56, fontFamily:'JetBrains Mono,monospace', fontSize:9, letterSpacing:'0.2em', textTransform:'uppercase', color:'#2a2a2a', writingMode:'vertical-rl' }}>
+        Scroll ↓
+      </div>
+    </section>
+  )
+}
 
-      <div className="flex-1 min-w-0">
-        <div
-          className="font-serif italic mb-1 transition-colors duration-200"
-          style={{
-            fontSize: 'clamp(20px, 2.5vw, 36px)',
-            lineHeight: 1,
-            letterSpacing: '-0.01em',
-          }}
-          onMouseEnter={e => { /* color handled by group */ }}
-        >
-          <span className="group-hover:text-[#c8ff00] transition-colors duration-200">
+function ProjectGrid() {
+  const ref    = useRef(null)
+  const inView = useInView(ref, { once:true, margin:'-10%' })
+  return (
+    <section ref={ref} style={{ padding:'100px 4vw', borderTop:'1px solid rgba(255,255,255,0.05)' }}>
+      <motion.div initial={{opacity:0,y:20}} animate={inView?{opacity:1,y:0}:{}} transition={{duration:0.7}}
+        style={{ display:'flex', justifyContent:'space-between', alignItems:'baseline', marginBottom:48 }}>
+        <div style={{ fontFamily:'JetBrains Mono,monospace', fontSize:9, letterSpacing:'0.16em', textTransform:'uppercase', color:'#2a2a2a' }}>[ 01 / SELECTED_WORK ]</div>
+        <Link to="/work" style={{ fontFamily:'JetBrains Mono,monospace', fontSize:9, letterSpacing:'0.16em', textTransform:'uppercase', color:'#444', textDecoration:'none', transition:'color 0.2s' }}
+          onMouseEnter={e=>e.currentTarget.style.color='#c8ff00'} onMouseLeave={e=>e.currentTarget.style.color='#444'}>
+          All Projects →
+        </Link>
+      </motion.div>
+      <div style={{ display:'flex', gap:2, marginBottom:2 }}>
+        <ProjectCard project={projects[0]} width="60%" height={400} delay={0.1} inView={inView} />
+        <ProjectCard project={projects[1]} width="40%" height={400} delay={0.2} inView={inView} />
+      </div>
+      <div style={{ display:'flex', gap:2 }}>
+        <ProjectCard project={projects[2]} width="40%" height={340} delay={0.3} inView={inView} />
+        <ProjectCard project={projects[3]} width="60%" height={340} delay={0.4} inView={inView} />
+      </div>
+    </section>
+  )
+}
+
+function ProjectCard({ project, width, height, delay, inView }) {
+  const isWide = width === '60%'
+  return (
+    <motion.a href={project.link} target="_blank" rel="noopener noreferrer"
+      initial={{ opacity:0, y:50 }}
+      animate={inView ? { opacity:1, y:0 } : {}}
+      transition={{ duration:0.9, ease:[0.16,1,0.3,1], delay }}
+      whileHover="hovered"
+      style={{ width, height, display:'block', textDecoration:'none', color:'inherit', position:'relative', overflow:'hidden', flexShrink:0, border:'1px solid rgba(255,255,255,0.06)', background:'rgba(255,255,255,0.015)', backdropFilter:'blur(4px)' }}>
+      <div style={{ position:'absolute', inset:0, background:`radial-gradient(ellipse at 30% 40%, ${project.accent}06 0%, transparent 65%)` }} />
+      <div style={{ position:'absolute', inset:0, padding:'24px 24px 20px', display:'flex', flexDirection:'column', justifyContent:'space-between' }}>
+        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start' }}>
+          <span style={{ fontFamily:'JetBrains Mono,monospace', fontSize:9, letterSpacing:'0.14em', textTransform:'uppercase', color:'#2a2a2a' }}>{project.pid}</span>
+          <motion.span variants={{ hovered:{x:3,y:-3,color:'#c8ff00'} }} style={{ fontFamily:'JetBrains Mono,monospace', fontSize:14, color:'#2a2a2a' }}>↗</motion.span>
+        </div>
+        <div>
+          <div style={{ display:'flex', flexWrap:'wrap', gap:4, marginBottom:10 }}>
+            {project.tags.map(t => (
+              <span key={t} style={{ fontFamily:'JetBrains Mono,monospace', fontSize:8, letterSpacing:'0.1em', textTransform:'uppercase', color:'#444', border:'1px solid rgba(255,255,255,0.07)', padding:'2px 7px' }}>{t}</span>
+            ))}
+          </div>
+          <motion.div variants={{ hovered:{ color:'#d4d4d4' } }} style={{ fontFamily:'Syne,sans-serif', fontWeight:700, fontSize: isWide ? 'clamp(22px,2.5vw,36px)' : 'clamp(18px,2vw,26px)', letterSpacing:'-0.02em', color:'#555', lineHeight:1.1, marginBottom:8, transition:'color 0.4s' }}>
             {project.name}
-          </span>
-        </div>
-        <div
-          className="font-mono text-[11px] leading-relaxed mt-1"
-          style={{ color: '#3a3a3a', maxWidth: '480px' }}
-        >
-          {project.short}
+          </motion.div>
+          <p style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:12, color:'rgba(212,212,212,0.25)', lineHeight:1.65, maxWidth:480 }}>{project.short}</p>
         </div>
       </div>
+      <motion.div variants={{ hovered:{opacity:1} }} initial={{opacity:0}}
+        style={{ position:'absolute', inset:0, background:`radial-gradient(ellipse at 50% 80%, ${project.accent}10 0%, transparent 60%)`, pointerEvents:'none' }} />
+    </motion.a>
+  )
+}
 
-      <div className="hidden md:flex gap-2 flex-wrap justify-end">
-        {project.tags.map(t => (
-          <span
-            key={t}
-            className="font-mono text-[9px] tracking-wider uppercase px-2 py-1 transition-colors duration-200"
-            style={{ border: '1px solid #1a1a1a', color: '#3a3a3a' }}
-          >
-            {t}
-          </span>
-        ))}
-      </div>
-
-      <span
-        className="font-mono text-lg shrink-0 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
-        style={{ color: '#3a3a3a' }}
-      >
-        ↗
-      </span>
-    </a>
+function AboutSnippet() {
+  const ref    = useRef(null)
+  const inView = useInView(ref, { once:true, margin:'-15%' })
+  return (
+    <section ref={ref} style={{ padding:'100px 4vw', borderTop:'1px solid rgba(255,255,255,0.05)', display:'grid', gridTemplateColumns:'1fr 1fr', gap:80, alignItems:'start' }}>
+      <motion.div initial={{opacity:0,y:30}} animate={inView?{opacity:1,y:0}:{}} transition={{duration:0.9}}>
+        <div style={{ fontFamily:'JetBrains Mono,monospace', fontSize:9, letterSpacing:'0.16em', textTransform:'uppercase', color:'#2a2a2a', marginBottom:28 }}>[ 02 / IDENTITY ]</div>
+        <h2 style={{ fontFamily:'Syne,sans-serif', fontWeight:800, fontSize:'clamp(34px,4vw,56px)', letterSpacing:'-0.03em', lineHeight:1, color:'#d4d4d4', marginBottom:24 }}>
+          I find what<br />attackers<br /><span style={{ color:'#c8ff00' }}>exploit.</span>
+        </h2>
+        <p style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:14, color:'rgba(212,212,212,0.38)', lineHeight:1.85, maxWidth:380 }}>
+          Security engineer specialising in offensive security, adversary emulation, and intelligent threat detection. Building at the intersection of cybersecurity, AI, and data science.
+        </p>
+      </motion.div>
+      <motion.div initial={{opacity:0,y:30}} animate={inView?{opacity:1,y:0}:{}} transition={{duration:0.9,delay:0.12}}>
+        <div style={{ border:'1px solid rgba(255,255,255,0.07)', background:'rgba(255,255,255,0.02)', backdropFilter:'blur(20px)', padding:28 }}>
+          <div style={{ fontFamily:'JetBrains Mono,monospace', fontSize:9, letterSpacing:'0.14em', textTransform:'uppercase', color:'#444', marginBottom:16, paddingBottom:12, borderBottom:'1px solid rgba(255,255,255,0.06)' }}>CURRENT_STATUS</div>
+          {[
+            ['Institution', 'Edge Hill University'],
+            ['Programme',   'BSc Computer Science'],
+            ['Year',        '2nd Year (2024–2027)'],
+            ['Focus',       'Cybersecurity pathway'],
+            ['Availability', <span style={{ color:'#c8ff00' }}>Open ●</span>],
+          ].map(([k, v]) => (
+            <div key={k} style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'9px 0', borderBottom:'1px solid rgba(255,255,255,0.04)' }}>
+              <span style={{ fontFamily:'JetBrains Mono,monospace', fontSize:9, letterSpacing:'0.1em', textTransform:'uppercase', color:'#2a2a2a' }}>{k}</span>
+              <span style={{ fontFamily:'JetBrains Mono,monospace', fontSize:9, color:'#666' }}>{v}</span>
+            </div>
+          ))}
+        </div>
+        <Link to="/about" style={{ display:'inline-block', marginTop:14, fontFamily:'JetBrains Mono,monospace', fontSize:9, letterSpacing:'0.14em', textTransform:'uppercase', color:'#444', textDecoration:'none', transition:'color 0.2s' }}
+          onMouseEnter={e=>e.currentTarget.style.color='#c8ff00'} onMouseLeave={e=>e.currentTarget.style.color='#444'}>
+          Full Profile →
+        </Link>
+      </motion.div>
+    </section>
   )
 }

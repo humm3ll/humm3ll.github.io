@@ -1,177 +1,73 @@
-import { useEffect, useRef } from 'react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useRef } from 'react'
+import { motion, useInView } from 'framer-motion'
 import { skills } from '../data'
 import Ticker from '../components/Ticker'
 
-gsap.registerPlugin(ScrollTrigger)
-
 export default function About() {
   const headerRef = useRef(null)
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      const lines = headerRef.current?.querySelectorAll('.split-inner')
-      if (lines) {
-        gsap.to(lines, { y: '0%', duration: 1.1, ease: 'expo.out', stagger: 0.1, delay: 0.1 })
-      }
-      gsap.utils.toArray('.reveal-about').forEach((el, i) => {
-        gsap.fromTo(el,
-          { opacity: 0, y: 32 },
-          {
-            opacity: 1, y: 0, duration: 0.85, ease: 'expo.out',
-            scrollTrigger: { trigger: el, start: 'top 88%' },
-            delay: i * 0.04,
-          }
-        )
-      })
-    })
-    return () => ctx.revert()
-  }, [])
+  const headerIn  = useInView(headerRef, { once:true })
+  const bioRef    = useRef(null)
+  const bioIn     = useInView(bioRef, { once:true, margin:'-10%' })
 
   return (
     <main>
       {/* Header */}
-      <section className="px-10 pt-40 pb-24" style={{ borderBottom: '1px solid #1a1a1a' }}>
-        <div
-          className="font-mono text-[10px] tracking-widest uppercase mb-12"
-          style={{ color: '#3a3a3a' }}
-        >
-          [ About ]
+      <section ref={headerRef} style={{ padding:'140px 4vw 80px', borderBottom:'1px solid rgba(255,255,255,0.05)' }}>
+        <motion.div initial={{opacity:0}} animate={headerIn?{opacity:1}:{}} transition={{duration:0.6}}
+          style={{ fontFamily:'JetBrains Mono,monospace', fontSize:9, letterSpacing:'0.16em', textTransform:'uppercase', color:'#2a2a2a', marginBottom:32 }}>
+          [ SYS_ABOUT / IDENTITY_FILE ]
+        </motion.div>
+        <div style={{ overflow:'hidden' }}>
+          <motion.h1 initial={{y:'100%'}} animate={headerIn?{y:0}:{}} transition={{duration:1.1,ease:[0.16,1,0.3,1]}}
+            style={{ fontFamily:'Syne,sans-serif', fontWeight:800, fontSize:'clamp(60px,10vw,130px)', lineHeight:0.88, letterSpacing:'-0.04em', color:'#d4d4d4' }}>
+            Security<br /><span style={{ color:'#c8ff00' }}>Engineer.</span>
+          </motion.h1>
         </div>
-        <h1
-          ref={headerRef}
-          className="font-serif italic max-w-4xl"
-          style={{
-            fontSize: 'clamp(48px, 8vw, 110px)',
-            lineHeight: 0.9,
-            letterSpacing: '-0.02em',
-          }}
-        >
-          <span className="split-line"><span className="split-inner">Security</span></span>
-          <span className="split-line"><span className="split-inner">Engineer.</span></span>
-        </h1>
       </section>
 
       <Ticker />
 
       {/* Bio grid */}
-      <section
-        className="grid px-10 py-28 gap-0"
-        style={{
-          gridTemplateColumns: '1fr 1fr',
-          borderBottom: '1px solid #1a1a1a',
-        }}
-      >
-        {/* Left: statement */}
-        <div
-          className="pr-20 reveal-about"
-          style={{ borderRight: '1px solid #1a1a1a' }}
-        >
-          <p
-            className="font-serif italic mb-8"
-            style={{
-              fontSize: 'clamp(28px, 3.5vw, 48px)',
-              lineHeight: 1.1,
-              letterSpacing: '-0.01em',
-            }}
-          >
-            I find what<br />
-            <span style={{ color: '#3a3a3a' }}>attackers</span><br />
-            exploit.
+      <section ref={bioRef} style={{ padding:'100px 4vw', borderBottom:'1px solid rgba(255,255,255,0.05)', display:'grid', gridTemplateColumns:'1fr 1fr', gap:80 }}>
+        <motion.div initial={{opacity:0,y:30}} animate={bioIn?{opacity:1,y:0}:{}} transition={{duration:0.9}}>
+          <p style={{ fontFamily:'Syne,sans-serif', fontWeight:700, fontSize:'clamp(26px,3vw,42px)', letterSpacing:'-0.02em', lineHeight:1.1, color:'#d4d4d4', marginBottom:28 }}>
+            I find what attackers<br /><span style={{ color:'#c8ff00' }}>exploit.</span>
           </p>
-          <p
-            className="font-body text-sm leading-loose mb-5"
-            style={{ color: 'rgba(240,237,230,0.4)', letterSpacing: '0.02em', maxWidth: '400px' }}
-          >
-            Computer Science student at Edge Hill University, specialising
-            in offensive security, adversary emulation, and intelligent threat
-            detection. Building at the intersection of cybersecurity, AI, and
-            data science.
+          <p style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:14, color:'rgba(212,212,212,0.38)', lineHeight:1.85, marginBottom:20, maxWidth:420 }}>
+            Computer Science student at Edge Hill University, specialising in offensive security, adversary emulation, and intelligent threat detection.
           </p>
-          <p
-            className="font-body text-sm leading-loose"
-            style={{ color: 'rgba(240,237,230,0.4)', letterSpacing: '0.02em', maxWidth: '400px' }}
-          >
-            Goal: Red Team Operator contributing to teams working at the
-            cutting edge of cyber and cyber-physical defence.
+          <p style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:14, color:'rgba(212,212,212,0.38)', lineHeight:1.85, maxWidth:420 }}>
+            My work sits at the intersection of cybersecurity, AI, and data science — building tooling for automated threat detection and secure system design. Goal: Red Team Operator.
           </p>
-        </div>
+        </motion.div>
 
-        {/* Right: details */}
-        <div className="pl-20 reveal-about" style={{ transitionDelay: '0.1s' }}>
-          {/* Education */}
-          <div className="mb-12">
-            <div
-              className="font-mono text-[9px] tracking-widest uppercase mb-5 pb-4"
-              style={{ color: '#3a3a3a', borderBottom: '1px solid #1a1a1a' }}
-            >
-              Education
-            </div>
-            <div
-              className="font-mono text-[9px] tracking-widest uppercase mb-2"
-              style={{ color: '#c8ff00' }}
-            >
-              Oct 2024 – May 2027
-            </div>
-            <div
-              className="font-body text-sm mb-1"
-              style={{ color: '#f0ede6' }}
-            >
-              Edge Hill University
-            </div>
-            <div
-              className="font-mono text-[10px]"
-              style={{ color: '#3a3a3a' }}
-            >
-              BSc (Hons) Computer Science — Cybersecurity pathway
-            </div>
+        <motion.div initial={{opacity:0,y:30}} animate={bioIn?{opacity:1,y:0}:{}} transition={{duration:0.9,delay:0.12}}>
+          <div style={{ fontFamily:'JetBrains Mono,monospace', fontSize:9, letterSpacing:'0.14em', textTransform:'uppercase', color:'#2a2a2a', marginBottom:20, paddingBottom:14, borderBottom:'1px solid rgba(255,255,255,0.06)' }}>
+            EDUCATION
           </div>
+          <div style={{ fontFamily:'JetBrains Mono,monospace', fontSize:9, letterSpacing:'0.1em', color:'#c8ff00', marginBottom:6, textTransform:'uppercase' }}>Oct 2024 – May 2027</div>
+          <div style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:15, fontWeight:600, color:'#d4d4d4', marginBottom:4 }}>Edge Hill University</div>
+          <div style={{ fontFamily:'JetBrains Mono,monospace', fontSize:10, color:'#444', marginBottom:32, letterSpacing:'0.05em' }}>BSc (Hons) Computer Science — Cybersecurity</div>
 
-          {/* Skills list */}
-          <div>
-            <div
-              className="font-mono text-[9px] tracking-widest uppercase mb-5 pb-4"
-              style={{ color: '#3a3a3a', borderBottom: '1px solid #1a1a1a' }}
-            >
-              Stack
-            </div>
-            <div>
-              {skills.map((s, i) => (
-                <div
-                  key={s.name}
-                  className="flex justify-between items-center py-3 reveal-about"
-                  style={{ borderBottom: '1px solid #1a1a1a', transitionDelay: `${i * 0.04}s` }}
-                >
-                  <span className="font-body text-sm" style={{ color: '#f0ede6' }}>{s.name}</span>
-                  <span className="font-mono text-[9px] tracking-wider" style={{ color: '#3a3a3a' }}>{s.note}</span>
-                </div>
-              ))}
-            </div>
+          <div style={{ fontFamily:'JetBrains Mono,monospace', fontSize:9, letterSpacing:'0.14em', textTransform:'uppercase', color:'#2a2a2a', marginBottom:16, paddingBottom:12, borderBottom:'1px solid rgba(255,255,255,0.06)' }}>
+            STACK
           </div>
-        </div>
+          {skills.map((s, i) => (
+            <motion.div key={s.name} initial={{opacity:0,x:-16}} animate={bioIn?{opacity:1,x:0}:{}} transition={{duration:0.6,delay:0.2+i*0.05}}
+              style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'10px 0', borderBottom:'1px solid rgba(255,255,255,0.04)' }}>
+              <span style={{ fontFamily:'Space Grotesk,sans-serif', fontSize:13, color:'#888' }}>{s.name}</span>
+              <span style={{ fontFamily:'JetBrains Mono,monospace', fontSize:9, color:'#2a2a2a', letterSpacing:'0.08em' }}>{s.note}</span>
+            </motion.div>
+          ))}
+        </motion.div>
       </section>
 
-      {/* Big year */}
-      <section
-        className="px-10 py-24 reveal-about"
-        style={{ borderBottom: '1px solid #1a1a1a' }}
-      >
-        <div
-          className="font-serif italic"
-          style={{
-            fontSize: 'clamp(100px, 18vw, 260px)',
-            lineHeight: 1,
-            letterSpacing: '-0.03em',
-            color: '#1a1a1a',
-          }}
-        >
+      {/* Ghost year */}
+      <section style={{ padding:'60px 4vw 80px', overflow:'hidden', borderBottom:'1px solid rgba(255,255,255,0.05)' }}>
+        <div style={{ fontFamily:'Syne,sans-serif', fontWeight:800, fontSize:'clamp(80px,16vw,220px)', lineHeight:1, letterSpacing:'-0.04em', color:'rgba(255,255,255,0.03)', userSelect:'none' }}>
           2024—
         </div>
-        <div
-          className="font-body text-sm mt-4 max-w-md"
-          style={{ color: 'rgba(240,237,230,0.3)', letterSpacing: '0.02em' }}
-        >
+        <div style={{ fontFamily:'JetBrains Mono,monospace', fontSize:10, color:'#2a2a2a', letterSpacing:'0.1em', marginTop:-16 }}>
           Year enrolment began. Building in public since.
         </div>
       </section>
