@@ -85,7 +85,7 @@ function Hero() {
       {/* Coords */}
       {subVisible && (
         <div style={{ position: 'absolute', bottom: 28, left: 32, ...mono, fontSize: 9, color: '#1a1a1a', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-          53.5461°N 2.6461°W // ENGLAND, UK
+          ENGLAND, UK
         </div>
       )}
     </section>
